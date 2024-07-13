@@ -52,6 +52,10 @@ function App() {
     });
   }
 
+  function cleanScreen() {
+    canvasContext?.clearRect(0, 0, window.innerWidth, window.innerHeight - 30);
+  }
+
   function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
     if (canvasContext) {
       switch (action) {
@@ -83,6 +87,7 @@ function App() {
       <div>
         <button onClick={handleClickSelection}>Seleccionar</button>
         <button onClick={handleClickCreate}>Crear Punto</button>
+        <button onClick={cleanScreen}>Limpiar</button>
       </div>
     </div>
   )
