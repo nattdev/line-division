@@ -41,13 +41,20 @@ function App() {
     }
   }
 
+  const [isSelected, setIsSelected] = useState(false);
+  const [selectedPositionX, setSelectedPositionX] = useState(0);
+  const [selectedPositionY, setSelectedPositionY] = useState(0);
+
   function selectPoint(e: React.MouseEvent<HTMLCanvasElement>) {
     const x = e.clientX;
     const y = e.clientY;
 
     points.forEach(point => {
-      if (Math.abs(x - point.x) < 5 && Math.abs(y - point.y) < 5) {
+      if (Math.abs(x - point.x) < 15 && Math.abs(y - point.y) < 15) {
         console.log(`Selected Point: (${point.x}, ${point.y})`);
+        setIsSelected(true);
+        setSelectedPositionX(point.x);
+        setSelectedPositionY(point.y);
       }
     });
   }
@@ -78,7 +85,13 @@ function App() {
 
   function handleClickCreate() {
     setAction("create");
+    setIsSelected(false);
   }
+
+  const dynamicPosition = {
+    left: `${selectedPositionX - 10}px`,
+    top: `${selectedPositionY - 10}px`
+  };
 
   return (
     <div>
@@ -89,6 +102,7 @@ function App() {
         <button onClick={handleClickCreate}>Crear Punto</button>
         <button onClick={cleanScreen}>Limpiar</button>
       </div>
+      <div className={isSelected ? "selected" : "hide"} style={dynamicPosition}></div>
     </div>
   )
 }
