@@ -44,6 +44,10 @@ function App() {
   const [isSelected, setIsSelected] = useState(false);
   const [selectedPositionX, setSelectedPositionX] = useState(0);
   const [selectedPositionY, setSelectedPositionY] = useState(0);
+  const [selectedPoints, setSelectedPoints] = useState(0);
+  const [isDynamicBar, setIsDynamicBar] = useState(true);
+  const [beginPoint, setBeginPoint] = useState<Point>({x: 0, y:0});
+  const [endPoint, setEndPoint] = useState({});
 
   function selectPoint(e: React.MouseEvent<HTMLCanvasElement>) {
     const x = e.clientX;
@@ -52,9 +56,24 @@ function App() {
     points.forEach(point => {
       if (Math.abs(x - point.x) < 15 && Math.abs(y - point.y) < 15) {
         console.log(`Selected Point: (${point.x}, ${point.y})`);
+        let totalPoints = selectedPoints + 1;
+        setSelectedPoints(totalPoints);
         setIsSelected(true);
-        setSelectedPositionX(point.x);
-        setSelectedPositionY(point.y);
+        setSelectedPositionX(point.x - 10);
+        setSelectedPositionY(point.y - 10);
+        if (totalPoints == 1) {
+          setBeginPoint({ x: point.x, y: point.y });
+        } else {
+          const deltaX = point.x - beginPoint.x;
+          const deltaY = point.y - beginPoint.y;
+          setEndPoint({ x: point.x, y: point.y });
+          setIsDynamicBar(false);
+          setDynamicHeightBar((Math.sqrt(deltaX * deltaX + deltaY * deltaY)));
+
+          const angleInRadians = Math.atan2(deltaY, deltaX);
+          const angleInDegrees = angleInRadians * (180 / Math.PI);
+          setDynamicAngleBar(angleInDegrees);
+        }
       }
     });
   }
@@ -67,6 +86,8 @@ function App() {
     if (canvasContext) {
       switch (action) {
         case "selection":
+          setIsSelected(false);
+          setSelectedPoints(0);
           selectPoint(e);
           console.log("selection");
           break;
@@ -89,20 +110,49 @@ function App() {
   }
 
   const dynamicPosition = {
-    left: `${selectedPositionX - 10}px`,
-    top: `${selectedPositionY - 10}px`
+    left: `${selectedPositionX}px`,
+    top: `${selectedPositionY}px`
+  };
+
+  const [dynamicHeightBar, setDynamicHeightBar] = useState(0);
+  const [dynamicAngleBar, setDynamicAngleBar] = useState(0);
+
+  function handleMouseMove(e: React.MouseEvent<HTMLCanvasElement>) {
+    if (isSelected && isDynamicBar) {
+      const x = e.clientX - 10;
+      const y = e.clientY - 10;
+
+      const deltaX = x - selectedPositionX;
+      const deltaY = y - selectedPositionY;
+
+      const angleInRadians = Math.atan2(deltaY, deltaX);
+
+      const angleInDegrees = angleInRadians * (180 / Math.PI);
+
+      setDynamicAngleBar(angleInDegrees);
+      console.log(x, y);
+      console.log(e);
+      setDynamicHeightBar((Math.sqrt(deltaX * deltaX + deltaY * deltaY)) - 20)
+    }
+  }
+
+  const dynamicBarPosition = {
+    left: `${beginPoint.x - 5}px`,
+    top: `${beginPoint.y}px`,
+    height: `${dynamicHeightBar}px`,
+    transform: `rotate(${dynamicAngleBar}deg)`
   };
 
   return (
     <div>
-      <canvas ref={canvasRef} onClick={handleClick}>
+      <canvas ref={canvasRef} onClick={handleClick} onMouseMove={handleMouseMove}>
       </canvas>
       <div>
         <button onClick={handleClickSelection}>Seleccionar</button>
         <button onClick={handleClickCreate}>Crear Punto</button>
         <button onClick={cleanScreen}>Limpiar</button>
       </div>
-      <div className={isSelected ? "selected" : "hide"} style={dynamicPosition}></div>
+      {isSelected ? <div><div className={isSelected && action == "selection" ? "selected" : "hide"} style={dynamicPosition}></div><div className={isSelected && action == "selection" ? "line" : "hide"} style={dynamicBarPosition}></div></div> : ""}
     </div>
   )
 }

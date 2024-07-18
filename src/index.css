@@ -11,3 +11,12 @@ body {
     top: 0;
     left: 0;
 }
+
+.line {
+    background: #000000;
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    transform-origin: top;
+    rotate: -90deg;
+}
