@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
+import Line from './components/Line';
 
 interface Point {
   x: number;
   y: number;
+}
+
+interface PositionBar {
+  beginPoint: { x: number, y: number };
+  endPoint: { x: number, y: number };
 }
 
 function App() {
@@ -46,8 +52,10 @@ function App() {
   const [selectedPositionY, setSelectedPositionY] = useState(0);
   const [selectedPoints, setSelectedPoints] = useState(0);
   const [isDynamicBar, setIsDynamicBar] = useState(true);
-  const [beginPoint, setBeginPoint] = useState<Point>({x: 0, y:0});
-  const [endPoint, setEndPoint] = useState({});
+  const [beginPoint, setBeginPoint] = useState<Point>({ x: 0, y: 0 });
+  const [endPoint, setEndPoint] = useState<Point>({ x: 0, y: 0 });
+  const [isCreatedLine, setIsCreatedLine] = useState(false);
+  const [lines, setLines] = useState<PositionBar[]>([{ beginPoint: { x: 0, y: 0 }, endPoint: { x: 0, y: 0 }}]);
 
   function selectPoint(e: React.MouseEvent<HTMLCanvasElement>) {
     const x = e.clientX;
@@ -64,15 +72,12 @@ function App() {
         if (totalPoints == 1) {
           setBeginPoint({ x: point.x, y: point.y });
         } else {
-          const deltaX = point.x - beginPoint.x;
-          const deltaY = point.y - beginPoint.y;
           setEndPoint({ x: point.x, y: point.y });
           setIsDynamicBar(false);
-          setDynamicHeightBar((Math.sqrt(deltaX * deltaX + deltaY * deltaY)));
-
-          const angleInRadians = Math.atan2(deltaY, deltaX);
-          const angleInDegrees = angleInRadians * (180 / Math.PI);
-          setDynamicAngleBar(angleInDegrees);
+          setIsCreatedLine(true);
+          const newLine = {beginPoint : {x: beginPoint.x, y: beginPoint.y}, endPoint : {x: point.x, y: point.y}};
+          setLines([...lines, newLine]);
+          setSelectedPoints(0);
         }
       }
     });
@@ -80,6 +85,7 @@ function App() {
 
   function cleanScreen() {
     canvasContext?.clearRect(0, 0, window.innerWidth, window.innerHeight - 30);
+    setLines([]);
   }
 
   function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
@@ -88,7 +94,12 @@ function App() {
         case "selection":
           setIsSelected(false);
           setSelectedPoints(0);
+          setIsDynamicBar(true);
+          setDynamicHeightBar(0);
           selectPoint(e);
+          if(isCreatedLine) {
+            setIsCreatedLine(false);
+          }
           console.log("selection");
           break;
         case "create":
@@ -152,7 +163,13 @@ function App() {
         <button onClick={handleClickCreate}>Crear Punto</button>
         <button onClick={cleanScreen}>Limpiar</button>
       </div>
-      {isSelected ? <div><div className={isSelected && action == "selection" ? "selected" : "hide"} style={dynamicPosition}></div><div className={isSelected && action == "selection" ? "line" : "hide"} style={dynamicBarPosition}></div></div> : ""}
+      <div>
+        {isSelected ? <div className={isSelected && action == "selection" ? "selected" : "hide"} style={dynamicPosition}></div> : ""}
+        {isSelected ? <div className={isSelected && action == "selection" ? "line" : "hide"} style={dynamicBarPosition}></div> : ""}
+      </div>
+      <div>
+        {lines.map((line, i : number) => <div key={i}><Line position={line}/></div>)}
+      </div>
     </div>
   )
 }
