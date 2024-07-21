@@ -55,7 +55,7 @@ function App() {
   const [beginPoint, setBeginPoint] = useState<Point>({ x: 0, y: 0 });
   const [endPoint, setEndPoint] = useState<Point>({ x: 0, y: 0 });
   const [isCreatedLine, setIsCreatedLine] = useState(false);
-  const [lines, setLines] = useState<PositionBar[]>([{ beginPoint: { x: 0, y: 0 }, endPoint: { x: 0, y: 0 }}]);
+  const [lines, setLines] = useState<PositionBar[]>([]);
 
   function selectPoint(e: React.MouseEvent<HTMLCanvasElement>) {
     const x = e.clientX;
@@ -77,6 +77,7 @@ function App() {
           setIsCreatedLine(true);
           const newLine = {beginPoint : {x: beginPoint.x, y: beginPoint.y}, endPoint : {x: point.x, y: point.y}};
           setLines([...lines, newLine]);
+          setIsSelected(false);
           setSelectedPoints(0);
         }
       }
@@ -168,7 +169,7 @@ function App() {
         {isSelected ? <div className={isSelected && action == "selection" ? "line" : "hide"} style={dynamicBarPosition}></div> : ""}
       </div>
       <div>
-        {lines.map((line, i : number) => <div key={i}><Line position={line}/></div>)}
+        {lines.map((line, i : number) => <div key={i}><Line positionLine={line}/></div>)}
       </div>
     </div>
   )
