@@ -20,3 +20,10 @@ body {
     transform-origin: top;
     rotate: -90deg;
 }
+
+.input-line {
+    position: absolute;
+    left: -80px;
+    width: 80px;
+    bottom: calc(50% - 10px);
+}

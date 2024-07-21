@@ -17,8 +17,14 @@ function Line({ positionLine }: Props) {
         transform: `rotate(${angleBar}deg)`
     };
 
+    const inputStyle = {
+        transform: `rotate(${angleBar < 0 && angleBar > -90 ? 180 : angleBar < -90 && angleBar > -180 ? -180 : angleBar > 0 && angleBar < 90 ? -360 : 360}deg)`,
+    };
+
     return (
-        <div className="line" style={styleBarPosition}></div>
+        <div className="line" style={styleBarPosition}>
+            <input type="text" className="input-line" style={inputStyle}></input>
+        </div>
     )
 }
 
