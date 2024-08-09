@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import './App.css'
 import Line from './components/Line';
+import Point from './components/Point';
 
 interface Point {
   x: number;
@@ -14,38 +15,15 @@ interface PositionBar {
 
 function App() {
 
-  const [canvasContext, setCanvasContext] = useState<CanvasRenderingContext2D | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-
-    if (canvas) {
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-
-      canvas.width = windowWidth;
-      canvas.height = windowHeight - 30;
-
-      const context = canvas?.getContext("2d") || null;
-      setCanvasContext(context);
-    }
-  }, [canvasRef]);
-
   const [points, setPoints] = useState<Point[]>([]);
   const [action, setAction] = useState("");
 
-  function createPoint(e: React.MouseEvent<HTMLCanvasElement>) {
-    if (canvasContext) {
+  function createPoint(e : React.MouseEvent) {
       const x = e.clientX;
       const y = e.clientY;
       const pointPosition = { x, y };
       setPoints([...points, pointPosition]);
-      canvasContext.beginPath();
-      canvasContext.arc(pointPosition.x, pointPosition.y, 10, 0, 2 * Math.PI);
-      canvasContext.fill();
     }
-  }
 
   const [isSelected, setIsSelected] = useState(false);
   const [selectedPositionX, setSelectedPositionX] = useState(0);
@@ -57,7 +35,7 @@ function App() {
   const [isCreatedLine, setIsCreatedLine] = useState(false);
   const [lines, setLines] = useState<PositionBar[]>([]);
 
-  function selectPoint(e: React.MouseEvent<HTMLCanvasElement>) {
+  function selectPoint(e: React.MouseEvent) {
     const x = e.clientX;
     const y = e.clientY;
 
@@ -85,12 +63,11 @@ function App() {
   }
 
   function cleanScreen() {
-    canvasContext?.clearRect(0, 0, window.innerWidth, window.innerHeight - 30);
     setLines([]);
+    setPoints([]);
   }
 
-  function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
-    if (canvasContext) {
+  function handleClick(e: React.MouseEvent) {
       switch (action) {
         case "selection":
           setIsSelected(false);
@@ -109,7 +86,6 @@ function App() {
           break;
       }
       console.log(e);
-    }
   }
 
   function handleClickSelection() {
@@ -129,7 +105,7 @@ function App() {
   const [dynamicHeightBar, setDynamicHeightBar] = useState(0);
   const [dynamicAngleBar, setDynamicAngleBar] = useState(0);
 
-  function handleMouseMove(e: React.MouseEvent<HTMLCanvasElement>) {
+  function handleMouseMove(e : React.MouseEvent) {
     if (isSelected && isDynamicBar) {
       const x = e.clientX - 10;
       const y = e.clientY - 10;
@@ -156,9 +132,12 @@ function App() {
   };
 
   return (
-    <div>
-      <canvas ref={canvasRef} onClick={handleClick} onMouseMove={handleMouseMove}>
-      </canvas>
+    <div className='main-container'>
+      <div className="draw-screen" onClick={handleClick} onMouseMove={handleMouseMove}>
+        <div>
+          {points.map((point, i : number) => <div key={i}><Point positionPoint={point}/></div>)}
+        </div>
+      </div>
       <div>
         <button onClick={handleClickSelection}>Seleccionar</button>
         <button onClick={handleClickCreate}>Crear Punto</button>

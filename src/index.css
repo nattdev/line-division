@@ -1,5 +1,11 @@
 body {
     margin: 0;
+    overflow: hidden;
+}
+
+.main-container {
+    width: 100vw;
+    height: 100vh;
 }
 
 .selected {
@@ -26,4 +32,18 @@ body {
     left: -80px;
     width: 80px;
     bottom: calc(50% - 10px);
+}
+
+.draw-screen {
+    width: calc(100% - 40px);
+    height: 90%;
+    margin: 20px;
+}
+
+.point {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #000000;
+    position: absolute;
 }
