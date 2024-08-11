@@ -3,7 +3,7 @@ import './App.css'
 import Line from './components/Line';
 import Point from './components/Point';
 
-interface Point {
+export interface PointPosition {
   x: number;
   y: number;
 }
@@ -15,23 +15,23 @@ interface PositionBar {
 
 function App() {
 
-  const [points, setPoints] = useState<Point[]>([]);
+  const [points, setPoints] = useState<PointPosition[]>([]);
   const [action, setAction] = useState("");
 
-  function createPoint(e : React.MouseEvent) {
-      const x = e.clientX;
-      const y = e.clientY;
-      const pointPosition = { x, y };
-      setPoints([...points, pointPosition]);
-    }
+  function createPoint(e: React.MouseEvent) {
+    const x = e.clientX;
+    const y = e.clientY;
+    const pointPosition = { x, y };
+    setPoints([...points, pointPosition]);
+  }
 
   const [isSelected, setIsSelected] = useState(false);
   const [selectedPositionX, setSelectedPositionX] = useState(0);
   const [selectedPositionY, setSelectedPositionY] = useState(0);
   const [selectedPoints, setSelectedPoints] = useState(0);
   const [isDynamicBar, setIsDynamicBar] = useState(true);
-  const [beginPoint, setBeginPoint] = useState<Point>({ x: 0, y: 0 });
-  const [endPoint, setEndPoint] = useState<Point>({ x: 0, y: 0 });
+  const [beginPoint, setBeginPoint] = useState<PointPosition>({ x: 0, y: 0 });
+  const [endPoint, setEndPoint] = useState<PointPosition>({ x: 0, y: 0 });
   const [isCreatedLine, setIsCreatedLine] = useState(false);
   const [lines, setLines] = useState<PositionBar[]>([]);
 
@@ -53,7 +53,7 @@ function App() {
           setEndPoint({ x: point.x, y: point.y });
           setIsDynamicBar(false);
           setIsCreatedLine(true);
-          const newLine = {beginPoint : {x: beginPoint.x, y: beginPoint.y}, endPoint : {x: point.x, y: point.y}};
+          const newLine = { beginPoint: { x: beginPoint.x, y: beginPoint.y }, endPoint: { x: point.x, y: point.y } };
           setLines([...lines, newLine]);
           setIsSelected(false);
           setSelectedPoints(0);
@@ -68,24 +68,28 @@ function App() {
   }
 
   function handleClick(e: React.MouseEvent) {
-      switch (action) {
-        case "selection":
-          setIsSelected(false);
-          setSelectedPoints(0);
-          setIsDynamicBar(true);
-          setDynamicHeightBar(0);
-          selectPoint(e);
-          if(isCreatedLine) {
-            setIsCreatedLine(false);
-          }
-          console.log("selection");
-          break;
-        case "create":
-          createPoint(e);
-          console.log("create");
-          break;
-      }
-      console.log(e);
+    switch (action) {
+      case "selection":
+        setIsSelected(false);
+        setSelectedPoints(0);
+        setIsDynamicBar(true);
+        setDynamicHeightBar(0);
+        selectPoint(e);
+        if (isCreatedLine) {
+          setIsCreatedLine(false);
+        }
+        console.log("selection");
+        break;
+      case "create":
+        createPoint(e);
+        console.log("create");
+        break;
+    }
+    console.log(e);
+  }
+
+  function handleClickDivide() {
+    setAction("divide");
   }
 
   function handleClickSelection() {
@@ -105,7 +109,7 @@ function App() {
   const [dynamicHeightBar, setDynamicHeightBar] = useState(0);
   const [dynamicAngleBar, setDynamicAngleBar] = useState(0);
 
-  function handleMouseMove(e : React.MouseEvent) {
+  function handleMouseMove(e: React.MouseEvent) {
     if (isSelected && isDynamicBar) {
       const x = e.clientX - 10;
       const y = e.clientY - 10;
@@ -131,14 +135,17 @@ function App() {
     transform: `rotate(${dynamicAngleBar}deg)`
   };
 
+  const [sliceNumber, setSliceNumber] = useState(0);
+
   return (
     <div className='main-container'>
       <div className="draw-screen" onClick={handleClick} onMouseMove={handleMouseMove}>
         <div>
-          {points.map((point, i : number) => <div key={i}><Point positionPoint={point}/></div>)}
+          {points.map((point, i: number) => <div key={i}><Point positionPoint={point} /></div>)}
         </div>
       </div>
       <div>
+        <button onClick={handleClickDivide}>Dividir</button>
         <button onClick={handleClickSelection}>Seleccionar</button>
         <button onClick={handleClickCreate}>Crear Punto</button>
         <button onClick={cleanScreen}>Limpiar</button>
@@ -148,8 +155,11 @@ function App() {
         {isSelected ? <div className={isSelected && action == "selection" ? "line" : "hide"} style={dynamicBarPosition}></div> : ""}
       </div>
       <div>
-        {lines.map((line, i : number) => <div key={i}><Line positionLine={line}/></div>)}
+        {lines.map((line, i: number) => <div key={i}><Line positionLine={line} action={action} sliceNumber={sliceNumber}/></div>)}
       </div>
+      <form className="form-divide" onSubmit={(e) => { e.preventDefault() }}>
+        <label>Número de divisiones </label><input type="number"  onChange={(e) => setSliceNumber(parseInt(e.target.value))}></input>
+      </form>
     </div>
   )
 }

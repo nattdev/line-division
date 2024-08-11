@@ -29,8 +29,8 @@ body {
 
 .input-line {
     position: absolute;
-    left: -80px;
-    width: 80px;
+    left: -60px;
+    width: 50px;
     bottom: calc(50% - 10px);
 }
 
@@ -46,4 +46,9 @@ body {
     border-radius: 50%;
     background: #000000;
     position: absolute;
+}
+
+.form-divide {
+    position: absolute;
+    top: 0;
 }
