@@ -52,3 +52,18 @@ body {
     position: absolute;
     top: 0;
 }
+
+.division-text {
+    position: absolute;
+}
+
+.division-text p {
+    margin: 0;
+    background: #c3c3c3f8;
+    position: relative;
+    z-index: 50;
+    outline: solid 3px #c3c3c3f8;
+    min-width: 1em;
+    text-align: center;
+    font-size: 15px;
+}

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PointPosition } from "../App";
 import Point from "./Point";
+import DivisionText from "./DivisionText";
 
 type Props = {
     positionLine: { beginPoint: { x: number, y: number }, endPoint: { x: number, y: number } };
@@ -17,6 +18,7 @@ function Line({ positionLine, action, sliceNumber }: Props) {
     const angleBar = angleInDegrees;
 
     const [divisionPoints, setDivisionPoints] = useState<PointPosition[]>([]);
+    const [textPositions, setTextPositions] = useState<PointPosition[]>([]);
 
     const styleBarPosition = {
         left: `${positionLine.beginPoint.x - 5}px`,
@@ -26,11 +28,14 @@ function Line({ positionLine, action, sliceNumber }: Props) {
     };
 
     const inputStyle = {
-        transform: `rotate(${angleBar < 0 && angleBar > -90 ? 180 : angleBar < -90 && angleBar > -180 ? -180 : angleBar > 0 && angleBar < 90 ? -360 : 360}deg)`,
+        transform: `rotate(${angleBar < 0 && angleBar > -90 ? 90 : angleBar < -90 && angleBar > -180 ? -90 : angleBar > 0 && angleBar < 90 ? 90 : -90}deg)`,
     };
 
+    const refTotalSizeLine = useRef<HTMLInputElement>(null);
+    const [sliceText, setSliceText] = useState<string>();
 
     function handleClick() {
+        let numberPoints = [];
         if (action == "divide") {
             console.log(sliceNumber);
             console.log("divide");
@@ -46,12 +51,11 @@ function Line({ positionLine, action, sliceNumber }: Props) {
                 y: vector.y / (sliceNumber),
             };
 
-            let numberPoints = [];
 
             for (let i = 1; i < sliceNumber; i++) {
                 const point = {
-                    x: positionLine.beginPoint.x + (step.x * i) ,
-                    y: positionLine.beginPoint.y + (step.y * i) ,
+                    x: positionLine.beginPoint.x + (step.x * i),
+                    y: positionLine.beginPoint.y + (step.y * i),
                 };
                 numberPoints.push(point);
                 console.log(point);
@@ -59,6 +63,26 @@ function Line({ positionLine, action, sliceNumber }: Props) {
             }
 
             setDivisionPoints(numberPoints);
+
+            let allPoints = [positionLine.beginPoint, ...numberPoints, positionLine.endPoint];
+            console.log(allPoints, "all");
+
+            const textPositionsStore = []
+
+            for (let i = 0; i < allPoints.length - 1; i++) {
+                const midpoint = {
+                    x: ((allPoints[i].x + allPoints[i + 1].x) / 2),
+                    y: ((allPoints[i].y + allPoints[i + 1].y) / 2),
+                };
+                textPositionsStore.push(midpoint);
+            }
+            setTextPositions(textPositionsStore);
+            console.log(textPositions, "TEXT");
+
+            if (refTotalSizeLine.current) {
+                const sliceTextNumber = ((parseFloat(refTotalSizeLine.current.value) / (sliceNumber)).toFixed(2));
+                setSliceText(sliceTextNumber);
+            }
         }
     }
 
@@ -67,8 +91,11 @@ function Line({ positionLine, action, sliceNumber }: Props) {
             <div>
                 {divisionPoints.map((point, i: number) => <div key={i}><Point positionPoint={point} /></div>)}
             </div>
+            <div>
+                {textPositions.map((point, i: number) => <div key={i}><DivisionText positionPoint={point} text={sliceText || ''} /></div>)}
+            </div>
             <div className="line" style={styleBarPosition} onClick={handleClick}>
-                <input type="text" className="input-line" style={inputStyle}></input>
+                <input ref={refTotalSizeLine} type="text" className="input-line" style={inputStyle}></input>
             </div>
         </div>
 
