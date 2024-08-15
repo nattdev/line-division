@@ -6,7 +6,7 @@ type Props = {
 function DivisionText({text, positionPoint} : Props) {
 
     const styleTextPosition = {
-        left: `${positionPoint.x - 10}px`,
+        left: `${positionPoint.x - 20}px`,
         top: `${positionPoint.y - 10}px`,
     }
 

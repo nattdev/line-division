@@ -1,12 +1,15 @@
 type Props = {
     positionPoint: {x: number, y: number};
+    isDivisionPoint: boolean;
 }
 
-function Point({positionPoint} : Props) {
+function Point({positionPoint, isDivisionPoint} : Props) {
+
+    const positionCalculate = isDivisionPoint ? 8 : 10;
 
     const stylePointPosition = {
-        left: `${positionPoint.x - 10}px`,
-        top: `${positionPoint.y - 10}px`,
+        left: `${positionPoint.x - positionCalculate}px`,
+        top: `${positionPoint.y - positionCalculate}px`,
     }
 
     return (

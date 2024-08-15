@@ -88,8 +88,8 @@ function Line({ positionLine, action, sliceNumber }: Props) {
 
     return (
         <div>
-            <div>
-                {divisionPoints.map((point, i: number) => <div key={i}><Point positionPoint={point} /></div>)}
+            <div className="division-points">
+                {divisionPoints.map((point, i: number) => <div key={i}><Point positionPoint={point} isDivisionPoint={true}/></div>)}
             </div>
             <div>
                 {textPositions.map((point, i: number) => <div key={i}><DivisionText positionPoint={point} text={sliceText || ''} /></div>)}

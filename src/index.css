@@ -32,6 +32,7 @@ body {
     left: -60px;
     width: 50px;
     bottom: calc(50% - 10px);
+    text-align: center;
 }
 
 .draw-screen {
@@ -62,8 +63,13 @@ body {
     background: #c3c3c3f8;
     position: relative;
     z-index: 50;
-    outline: solid 3px #c3c3c3f8;
-    min-width: 1em;
+    outline: solid 1px #fffffff8;
+    min-width: 3em;
     text-align: center;
-    font-size: 15px;
+    font-size: 14px;
+}
+
+.division-points .point {
+    width: 16px;
+    height: 16px;
 }
