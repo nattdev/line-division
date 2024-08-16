@@ -1,6 +1,6 @@
 type Props = {
     positionPoint: {x: number, y: number};
-    isDivisionPoint: boolean;
+    isDivisionPoint?: boolean;
 }
 
 function Point({positionPoint, isDivisionPoint} : Props) {
