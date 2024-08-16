@@ -27,12 +27,23 @@ body {
     rotate: -90deg;
 }
 
-.input-line {
+.line-info {
+    width: max-content;
     position: absolute;
-    left: -60px;
-    width: 50px;
-    bottom: calc(50% - 10px);
+    left: 5px;
+    bottom: calc(50% - 30px);
     text-align: center;
+}
+
+.input-line {
+    width: 50px;
+    text-align: center;
+}
+
+
+.input-info {
+    margin: 4px 0 ;
+    font-size: 14px;
 }
 
 .draw-screen {

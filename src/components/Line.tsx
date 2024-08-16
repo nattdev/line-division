@@ -89,13 +89,16 @@ function Line({ positionLine, action, sliceNumber }: Props) {
     return (
         <div>
             <div className="division-points">
-                {divisionPoints.map((point, i: number) => <div key={i}><Point positionPoint={point} isDivisionPoint={true}/></div>)}
+                {divisionPoints.map((point, i: number) => <div key={i}><Point positionPoint={point} isDivisionPoint={true} /></div>)}
             </div>
             <div>
                 {textPositions.map((point, i: number) => <div key={i}><DivisionText positionPoint={point} text={sliceText || ''} /></div>)}
             </div>
             <div className="line" style={styleBarPosition} onClick={handleClick}>
-                <input ref={refTotalSizeLine} type="text" className="input-line" style={inputStyle}></input>
+                <div className="line-info" style={inputStyle}>
+                    <input ref={refTotalSizeLine} type="text" className="input-line"></input>
+                    <p className="input-info">{`${divisionPoints.length + 1} ${divisionPoints.length + 1 == 1 ? "parte" : "partes"} de ${sliceText == undefined ? 0 : sliceText}`}</p>
+                </div>
             </div>
         </div>
 
