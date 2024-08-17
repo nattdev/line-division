@@ -97,7 +97,7 @@ function Line({ positionLine, action, sliceNumber }: Props) {
             <div className="line" style={styleBarPosition} onClick={handleClick}>
                 <div className="line-info" style={inputStyle}>
                     <input ref={refTotalSizeLine} type="text" className="input-line"></input>
-                    <p className="input-info">{`${divisionPoints.length + 1} ${divisionPoints.length + 1 == 1 ? "parte" : "partes"} de ${sliceText == undefined ? 0 : sliceText}`}</p>
+                    <p className="input-info"><span>{divisionPoints.length + 1}</span>{` ${divisionPoints.length + 1 == 1 ? "parte" : "partes"} de ${sliceText == undefined ? 0 : sliceText}`}</p>
                 </div>
             </div>
         </div>
