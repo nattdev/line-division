@@ -32,7 +32,7 @@ function App() {
   const [selectedPoints, setSelectedPoints] = useState(0);
   const [isDynamicBar, setIsDynamicBar] = useState(true);
   const [beginPoint, setBeginPoint] = useState<PointPosition>({ x: 0, y: 0 });
-  const [endPoint, setEndPoint] = useState<PointPosition>({ x: 0, y: 0 });
+  const [, setEndPoint] = useState<PointPosition>({ x: 0, y: 0 });
   const [isCreatedLine, setIsCreatedLine] = useState(false);
   const [lines, setLines] = useState<PositionBar[]>([]);
 
