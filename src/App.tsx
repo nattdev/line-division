@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import Line from './components/Line';
 import Point from './components/Point';
+import Header from './components/Header';
 
 export interface PointPosition {
   x: number;
@@ -139,6 +140,7 @@ function App() {
 
   return (
     <div className='main-container'>
+      <Header/>
       <div className="draw-screen" onClick={handleClick} onMouseMove={handleMouseMove}>
         <div>
           {points.map((point, i: number) => <div key={i}><Point positionPoint={point} /></div>)}
