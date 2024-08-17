@@ -4,6 +4,8 @@ body {
 }
 
 .main-container {
+    display: flex;
+    flex-direction: column;
     width: 100vw;
     height: 100vh;
 }
@@ -48,7 +50,7 @@ body {
 
 .draw-screen {
     width: calc(100% - 40px);
-    height: 90%;
+    height: calc(90% - 40px);
     margin: 20px;
 }
 
@@ -60,9 +62,23 @@ body {
     position: absolute;
 }
 
+.controls {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    flex-grow: 1;
+    justify-items: center;
+}
+
 .form-divide {
-    position: absolute;
-    top: 0;
+    box-sizing: border-box;
+}
+
+.buttons {
+    grid-row: 2 / 3;
+}
+
+.buttons button {
+    margin: 0 0.2em;
 }
 
 .division-text {

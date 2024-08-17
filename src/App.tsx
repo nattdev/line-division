@@ -144,22 +144,26 @@ function App() {
           {points.map((point, i: number) => <div key={i}><Point positionPoint={point} /></div>)}
         </div>
       </div>
-      <div>
-        <button onClick={handleClickDivide}>Dividir</button>
-        <button onClick={handleClickSelection}>Seleccionar</button>
-        <button onClick={handleClickCreate}>Crear Punto</button>
-        <button onClick={cleanScreen}>Limpiar</button>
+      <div className='controls'>
+        {action == "divide" ? (
+          <form className="form-divide" onSubmit={(e) => { e.preventDefault() }}>
+            <label>Número de divisiones </label><input type="number" onChange={(e) => setSliceNumber(parseInt(e.target.value))}></input>
+          </form>
+        ) : false}
+        <div className='buttons'>
+          <button onClick={handleClickDivide}>Dividir Línea</button>
+          <button onClick={handleClickSelection}>Crear línea</button>
+          <button onClick={handleClickCreate}>Crear Punto</button>
+          <button onClick={cleanScreen}>Limpiar</button>
+        </div>
       </div>
       <div>
         {isSelected ? <div className={isSelected && action == "selection" ? "selected" : "hide"} style={dynamicPosition}></div> : ""}
         {isSelected ? <div className={isSelected && action == "selection" ? "line" : "hide"} style={dynamicBarPosition}></div> : ""}
       </div>
       <div>
-        {lines.map((line, i: number) => <div key={i}><Line positionLine={line} action={action} sliceNumber={sliceNumber}/></div>)}
+        {lines.map((line, i: number) => <div key={i}><Line positionLine={line} action={action} sliceNumber={sliceNumber} /></div>)}
       </div>
-      <form className="form-divide" onSubmit={(e) => { e.preventDefault() }}>
-        <label>Número de divisiones </label><input type="number"  onChange={(e) => setSliceNumber(parseInt(e.target.value))}></input>
-      </form>
     </div>
   )
 }
